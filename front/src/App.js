@@ -65,6 +65,7 @@ function App() {
                 <Route path="/login" element={<><Navbar clicked={"login"} /><Login /></>} />
                 <Route path="/profile/:id" element={<><Navbar clicked={"profile"}/> <NotAllowed /></>} />
                 <Route path="/home/" element={<><Navbar clicked={"home"}/> <NotAllowed /></>} />
+                <Route path="/hola" element={<>chao <div>HOLAMUNDO</div></>} />
               </>)
             :
             

@@ -21,7 +21,7 @@ A Javascript stack was used for easier and faster deployment, comprised of **Exp
 3. To install express, cors and other necessary modules, in the [api](api/) folder run: `npm install`
 
 4. To connect sequelize to the database, run the command: `sequelize init`
-
+np
 5. The transactions are encrypted through the SSL/TLS protocol. To create the certificate locally you can use `mkcert` and then add the path in:
 
 ```js
