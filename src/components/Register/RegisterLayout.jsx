@@ -4,6 +4,7 @@ import PersonalInfoForm from './PersonalInfoForm';
 import ContactInfoForm from './ContactInfoForm';
 import AccountInfoForm from './AccountInfoForm';
 import RegistrationSuccess from './RegistrationSuccess';
+import Register from '../../services/ApiRegister';
 
 function RegisterLayout() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -22,7 +23,7 @@ function RegisterLayout() {
     usuario: '',
     password: '',
     confirmPassword: '',
-    tipoUsuario: 'estudiante'
+    registrationCode: '',
   });
 
   const handleNextStep = () => {
@@ -36,7 +37,17 @@ function RegisterLayout() {
   const updateFormData = (newData) => {
     setFormData(prev => ({ ...prev, ...newData }));
   };
-
+  const handleRegistration = async () => {
+    try {
+      await Register(formData);
+    } catch (error) {
+      console.error("Error en el registro:", error);
+    }
+  };
+  
+  if (currentStep === 4) {
+    handleRegistration();
+  }
   return (
     <div className="min-h-screen bg-base-200 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
