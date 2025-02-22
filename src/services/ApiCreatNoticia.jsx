@@ -1,21 +1,26 @@
 import axios from 'axios';
 
-const CreatPost = async (data) => {
+const CreatNewPaper = async (data) => {
     const apiUrl = 'https://api.totalum.app/api/v1/crud/noticias';
-
-    // Verify that content is not empty (trimmed)
-    if (!data.title || data.title.trim() === '') {
-        throw new Error('Por favor escriba algo antes de Publicar');
-    }
-    if (!data.main || data.main.trim() === '') {
-        throw new Error('Por favor escriba algo antes de Publicar');
-    }
+    const storedUserId = localStorage.getItem('user') || sessionStorage.getItem('user');
 
     try {
+        const formData = new FormData();
+        formData.append('file', data.image);
+
+        const fileUploadResponse = await axios.post('https://api.totalum.app/api/v1/files/upload', formData, {
+            headers: {
+                'api-key': process.env.REACT_APP_API_KEY,
+                'content-type': 'multipart/form-data',
+            },
+        });
+        let profilePictureId = fileUploadResponse.data.data;
         // Hacer la solicitud POST a la API
         const response = await axios.post(apiUrl, {
-                "user": userId,
-                "content": content
+                user : storedUserId,
+                title : data.title,
+                main: data.main,
+                newsimage: {name:profilePictureId}
             },
             {
                 headers: {
@@ -31,4 +36,4 @@ const CreatPost = async (data) => {
     }
 };
 
-export default CreatPost;
+export default CreatNewPaper;

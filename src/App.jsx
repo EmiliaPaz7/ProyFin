@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
-import HomeInit from './pages/Home_Init';
+import ListNewPaper from './pages/ListNewPaper';
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/listNew" element={<HomeInit />} />
+          <Route path="/listnewpaper" element={<ListNewPaper />} />
         </Routes>
       </div>
     </Router>

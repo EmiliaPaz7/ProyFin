@@ -24,7 +24,7 @@ function Header() {
     <>
       <li>
         <Link 
-          to="/listNew" 
+          to="/listnewpaper" 
           className="btn btn-ghost btn-sm gap-2"
         >
           <Newspaper className="w-4 h-4" />

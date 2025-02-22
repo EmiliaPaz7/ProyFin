@@ -1,20 +1,29 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
+import CreatNewPaper from '../../services/ApiCreatNoticia';
 
 function CreateNewsModal({ isOpen, onClose }) {
     const [formData, setFormData] = useState({
         title: '',
-        content: '',
+        main: '',
         image: null
     });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Aquí irá la lógica de creación
+        handleNewPaper();
         onClose();
     };
 
     if (!isOpen) return null;
+
+    const handleNewPaper = async () => {
+        try {
+            await CreatNewPaper(formData);
+        } catch (error) {
+            console.error("Error en el registro:", error);
+        }
+    };
 
     return (
         <div className="modal modal-open">
@@ -48,8 +57,8 @@ function CreateNewsModal({ isOpen, onClose }) {
                         </label>
                         <textarea
                             className="textarea textarea-bordered h-32"
-                            value={formData.content}
-                            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                            value={formData.main}
+                            onChange={(e) => setFormData({ ...formData, main: e.target.value })}
                             required
                         />
                     </div>
