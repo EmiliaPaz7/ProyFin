@@ -1,9 +1,71 @@
 import { Link } from "react-router-dom";
-import { Moon, Sun, Menu } from "lucide-react";
-import { useState } from "react";
+import { Moon, Sun, Menu, Newspaper } from "lucide-react";
+import { useState, useEffect } from "react";
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Verificar el estado de inicio de sesión al cargar el componente
+    const checkLoginStatus = () => {
+      const localLogin = localStorage.getItem('isLoggedIn');
+      const sessionLogin = sessionStorage.getItem('isLoggedIn');
+      setIsLoggedIn(localLogin === 'true' || sessionLogin === 'true');
+    };
+
+    checkLoginStatus();
+    // Agregar event listener para actualizar el estado cuando cambie el almacenamiento
+    window.addEventListener('storage', checkLoginStatus);
+    return () => window.removeEventListener('storage', checkLoginStatus);
+  }, []);
+
+  const authButtons = isLoggedIn ? (
+    <>
+      <li>
+        <Link 
+          to="/listNew" 
+          className="btn btn-ghost btn-sm gap-2"
+        >
+          <Newspaper className="w-4 h-4" />
+          Noticias
+        </Link>
+      </li>
+      <li>
+        <button 
+          onClick={() => {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('user');
+            sessionStorage.removeItem('isLoggedIn');
+            sessionStorage.removeItem('user');
+            window.location.reload();
+          }}
+          className="btn btn-ghost btn-sm"
+        >
+          Cerrar Sesión
+        </button>
+      </li>
+    </>
+  ) : (
+    <>
+      <li>
+        <Link 
+          to="/login" 
+          className="btn btn-ghost btn-sm"
+        >
+          Iniciar Sesión
+        </Link>
+      </li>
+      <li>
+        <Link 
+          to="/register" 
+          className="btn btn-primary btn-sm"
+        >
+          Registrarse
+        </Link>
+      </li>
+    </>
+  );
 
   return (
     <header className="bg-base-100 shadow-lg backdrop-blur-sm bg-opacity-90 sticky top-0 z-50">
@@ -43,22 +105,7 @@ function Header() {
                   Programas
                 </Link>
               </li>
-              <li>
-                <Link 
-                  to="/login" 
-                  className="btn btn-ghost btn-sm"
-                >
-                  Iniciar Sesión
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/register" 
-                  className="btn btn-primary btn-sm"
-                >
-                  Registrarse
-                </Link>
-              </li>
+              {authButtons}
               <li>
                 <label className="swap swap-rotate">
                   <input type="checkbox" className="theme-controller" value="dark" />
@@ -98,22 +145,52 @@ function Header() {
                   Programas
                 </Link>
               </li>
-              <li>
-                <Link 
-                  to="/login" 
-                  className="btn btn-ghost btn-block"
-                >
-                  Iniciar Sesión
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/register" 
-                  className="btn btn-primary btn-block"
-                >
-                  Registrarse
-                </Link>
-              </li>
+              {isLoggedIn ? (
+                <>
+                  <li>
+                    <Link 
+                      to="/news" 
+                      className="btn btn-ghost btn-block gap-2"
+                    >
+                      <Newspaper className="w-4 h-4" />
+                      Noticias
+                    </Link>
+                  </li>
+                  <li>
+                    <button 
+                      onClick={() => {
+                        localStorage.removeItem('isLoggedIn');
+                        localStorage.removeItem('user');
+                        sessionStorage.removeItem('isLoggedIn');
+                        sessionStorage.removeItem('user');
+                        window.location.reload();
+                      }}
+                      className="btn btn-ghost btn-block"
+                    >
+                      Cerrar Sesión
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <Link 
+                      to="/login" 
+                      className="btn btn-ghost btn-block"
+                    >
+                      Iniciar Sesión
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/register" 
+                      className="btn btn-primary btn-block"
+                    >
+                      Registrarse
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
           </nav>
         )}
@@ -121,4 +198,5 @@ function Header() {
     </header>
   );
 }
+
 export default Header;

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Eye, EyeOff, LogIn } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Login from '../../services/ApiLogin';
 
 function LoginForm({ onForgotPassword }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,8 +13,7 @@ function LoginForm({ onForgotPassword }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Aquí iría la lógica de autenticación
-    console.log('Login attempt:', formData);
+    handleLogin();
   };
 
   const handleChange = (e) => {
@@ -22,6 +22,14 @@ function LoginForm({ onForgotPassword }) {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+  };
+  
+  const handleLogin = async () => {
+    try {
+      await Login(formData);
+    } catch (error) {
+      console.error("Error en el registro:", error);
+    }
   };
 
   return (

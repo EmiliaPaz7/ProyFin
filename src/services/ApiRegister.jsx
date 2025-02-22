@@ -19,7 +19,7 @@ const Register = async (data) => {
             password: data.password
         }, {
             headers: {
-                'api-key': 'sk-eyJrZXkiOiI2Y2FhODdmMGRmYmEyNTEyNDIxYWM3YTMiLCJuYW1lIjoicHJveWVjdCIsIm9yZ2FuaXphdGlvbklkIjoiY2Zici1ub3RpY2lhcyJ9',
+                'api-key': process.env.REACT_APP_API_KEY,
                 'content-type': 'application/json',
             },
         });

@@ -10,7 +10,6 @@ function LoginLayout() {
   const toggleForgotPassword = () => {
     setShowForgotPassword(!showForgotPassword);
   };
-
   return (
     <div className="flex-grow container mx-auto px-4">
       <div className="max-w-md mx-auto">
