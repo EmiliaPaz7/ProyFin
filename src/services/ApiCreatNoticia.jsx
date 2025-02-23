@@ -14,13 +14,14 @@ const CreatNewPaper = async (data) => {
                 'content-type': 'multipart/form-data',
             },
         });
-        let profilePictureId = fileUploadResponse.data.data;
+        let picturenewpaper = fileUploadResponse.data.data;
+        console.log(picturenewpaper);
         // Hacer la solicitud POST a la API
         const response = await axios.post(apiUrl, {
                 user : storedUserId,
                 title : data.title,
                 main: data.main,
-                newsimage: {name:profilePictureId}
+                newsimage: {name:picturenewpaper}
             },
             {
                 headers: {

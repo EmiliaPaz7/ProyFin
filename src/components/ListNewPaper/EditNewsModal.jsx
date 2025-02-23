@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
+import EditNewPaper from '../../services/ApiEditNoticia';
 
 function EditNewsModal({ isOpen, onClose, news }) {
     const [formData, setFormData] = useState({
         title: '',
-        content: '',
+        main: '',
         image: null
     });
 
@@ -12,19 +13,28 @@ function EditNewsModal({ isOpen, onClose, news }) {
         if (news) {
             setFormData({
                 title: news.title,
-                content: news.content,
-                image: null
+                main: news.main,
+                image: news.newsimage.name,
+                _id: news._id
             });
         }
     }, [news]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Aquí irá la lógica de actualización
+        handleEditPaper();
         onClose();
     };
 
     if (!isOpen) return null;
+
+    const handleEditPaper = async () => {
+        try {
+            await EditNewPaper(formData);
+        } catch (error) {
+            console.error("Error en el registro:", error);
+        }
+    };
 
     return (
         <div className="modal modal-open">
@@ -58,8 +68,8 @@ function EditNewsModal({ isOpen, onClose, news }) {
                         </label>
                         <textarea
                             className="textarea textarea-bordered h-32"
-                            value={formData.content}
-                            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                            value={formData.main}
+                            onChange={(e) => setFormData({ ...formData, main: e.target.value })}
                             required
                         />
                     </div>

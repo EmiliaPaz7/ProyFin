@@ -19,8 +19,8 @@ function NewsCard({ news, onDelete }) {
         <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300">
             <figure className="relative">
                 <img
-                    src={news.image}
-                    alt={news.title}
+                    src={news.newsimage.url}
+                    alt={news.newsimage.name}
                     className="w-full h-48 object-cover"
                 />
                 <div className="absolute top-2 right-2 flex gap-2">
@@ -42,11 +42,10 @@ function NewsCard({ news, onDelete }) {
 
             <div className="card-body">
                 <h2 className="card-title text-primary">{news.title}</h2>
-                <p className="text-base-content/70">{news.content}</p>
+                <p className="text-base-content/70">{news.main}</p>
                 <div className="flex items-center gap-2 text-sm text-base-content/60 mt-4">
                     <Clock className="w-4 h-4" />
-                    <span>{new Date(news.date).toLocaleDateString()}</span>
-                    <span className="ml-auto">{news.author}</span>
+                    <span>{new Date(news.createdAt).toLocaleDateString()}</span>
                 </div>
             </div>
 
