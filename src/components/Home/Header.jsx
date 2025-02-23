@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Moon, Sun, Menu, Newspaper } from "lucide-react";
+import { Moon, Sun, Menu, Newspaper} from "lucide-react";
 import { useState, useEffect } from "react";
 
 function Header() {
@@ -7,7 +7,6 @@ function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Verificar el estado de inicio de sesión al cargar el componente
     const checkLoginStatus = () => {
       const localLogin = localStorage.getItem('isLoggedIn');
       const sessionLogin = sessionStorage.getItem('isLoggedIn');
@@ -15,180 +14,102 @@ function Header() {
     };
 
     checkLoginStatus();
-    // Agregar event listener para actualizar el estado cuando cambie el almacenamiento
     window.addEventListener('storage', checkLoginStatus);
     return () => window.removeEventListener('storage', checkLoginStatus);
   }, []);
 
-  const authButtons = isLoggedIn ? (
-    <>
-      <li>
-        <Link 
-          to="/listnewpaper" 
-          className="btn btn-ghost btn-sm gap-2"
-        >
-          <Newspaper className="w-4 h-4" />
-          Noticias
-        </Link>
-      </li>
-      <li>
-        <button 
-          onClick={() => {
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('user');
-            sessionStorage.removeItem('isLoggedIn');
-            sessionStorage.removeItem('user');
-            window.location.reload();
-          }}
-          className="btn btn-ghost btn-sm"
-        >
-          Cerrar Sesión
-        </button>
-      </li>
-    </>
-  ) : (
-    <>
-      <li>
-        <Link 
-          to="/login" 
-          className="btn btn-ghost btn-sm"
-        >
-          Iniciar Sesión
-        </Link>
-      </li>
-      <li>
-        <Link 
-          to="/register" 
-          className="btn btn-primary btn-sm"
-        >
-          Registrarse
-        </Link>
-      </li>
-    </>
-  );
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('user');
+    sessionStorage.removeItem('isLoggedIn');
+    sessionStorage.removeItem('user');
+    window.location.reload();
+  };
 
   return (
     <header className="bg-base-100 shadow-lg backdrop-blur-sm bg-opacity-90 sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-3">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-4">
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center h-16">
+          <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
             <div className="avatar">
-              <div className="w-12 h-12 mask mask-hexagon bg-primary">
-                <img
-                  src="/logo.jpeg"
-                  alt="Logo del Colegio"
-                  className="object-cover"
-                />
+              <div className="w-10 h-10 mask mask-hexagon bg-primary">
+                <img src="/logo.jpeg" alt="Logo" className="object-cover" />
               </div>
             </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              Colegio Bernabé de Larraul
+            <h1 className="text-lg md:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              Colegio Bernabé
             </h1>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:block">
-            <ul className="flex items-center space-x-6">
-              <li>
-                <Link 
-                  to="/about" 
-                  className="link link-hover text-base-content hover:text-primary transition-colors"
-                >
-                  Nosotros
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/programs" 
-                  className="link link-hover text-base-content hover:text-primary transition-colors"
-                >
-                  Programas
-                </Link>
-              </li>
-              {authButtons}
-              <li>
-                <label className="swap swap-rotate">
-                  <input type="checkbox" className="theme-controller" value="dark" />
-                  <Sun className="swap-on w-5 h-5" />
-                  <Moon className="swap-off w-5 h-5" />
-                </label>
-              </li>
-            </ul>
+          <nav className="hidden md:flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              {isLoggedIn ? (
+                <>
+                  <Link to="/listnewpaper" className="btn btn-ghost btn-sm gap-2">
+                    <Newspaper className="w-4 h-4" />
+                    Noticias
+                  </Link>
+                  <button onClick={handleLogout} className="btn btn-ghost btn-sm">
+                    Cerrar Sesión
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" className="btn btn-ghost btn-sm">
+                    Iniciar Sesión
+                  </Link>
+                  <Link to="/register" className="btn btn-primary btn-sm">
+                    Registrarse
+                  </Link>
+                </>
+              )}
+              <label className="swap swap-rotate btn btn-ghost btn-sm btn-circle">
+                <input type="checkbox" className="theme-controller" value="dark" />
+                <Sun className="swap-on w-4 h-4" />
+                <Moon className="swap-off w-4 h-4" />
+              </label>
+            </div>
           </nav>
 
           {/* Mobile Menu Button */}
-          <button 
-            className="btn btn-ghost md:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <Menu className="w-6 h-6" />
-          </button>
+          <div className="flex items-center gap-2 md:hidden">
+            <label className="swap swap-rotate btn btn-ghost btn-sm btn-circle">
+              <input type="checkbox" className="theme-controller" value="dark" />
+              <Sun className="swap-on w-4 h-4" />
+              <Moon className="swap-off w-4 h-4" />
+            </label>
+            <button className="btn btn-ghost btn-circle" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              <Menu className="w-6 h-6" />
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <nav className="md:hidden mt-4 pb-4">
-            <ul className="flex flex-col space-y-4">
-              <li>
-                <Link 
-                  to="/about" 
-                  className="block link link-hover text-base-content hover:text-primary"
-                >
-                  Nosotros
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/programs" 
-                  className="block link link-hover text-base-content hover:text-primary"
-                >
-                  Programas
-                </Link>
-              </li>
+          <nav className="md:hidden py-4 border-t border-base-200">
+            <ul className="flex flex-col space-y-2">
+              <li><Link to="/about" className="btn btn-ghost btn-sm btn-block justify-start">Nosotros</Link></li>
+              <li><Link to="/programs" className="btn btn-ghost btn-sm btn-block justify-start">Programas</Link></li>
+              <li><Link to="/admissions" className="btn btn-ghost btn-sm btn-block justify-start">Admisiones</Link></li>
               {isLoggedIn ? (
                 <>
                   <li>
-                    <Link 
-                      to="/news" 
-                      className="btn btn-ghost btn-block gap-2"
-                    >
+                    <Link to="/listnewpaper" className="btn btn-ghost btn-sm btn-block justify-start gap-2">
                       <Newspaper className="w-4 h-4" />
                       Noticias
                     </Link>
                   </li>
                   <li>
-                    <button 
-                      onClick={() => {
-                        localStorage.removeItem('isLoggedIn');
-                        localStorage.removeItem('user');
-                        sessionStorage.removeItem('isLoggedIn');
-                        sessionStorage.removeItem('user');
-                        window.location.reload();
-                      }}
-                      className="btn btn-ghost btn-block"
-                    >
+                    <button onClick={handleLogout} className="btn btn-ghost btn-sm btn-block justify-start">
                       Cerrar Sesión
                     </button>
                   </li>
                 </>
               ) : (
                 <>
-                  <li>
-                    <Link 
-                      to="/login" 
-                      className="btn btn-ghost btn-block"
-                    >
-                      Iniciar Sesión
-                    </Link>
-                  </li>
-                  <li>
-                    <Link 
-                      to="/register" 
-                      className="btn btn-primary btn-block"
-                    >
-                      Registrarse
-                    </Link>
-                  </li>
+                  <li><Link to="/login" className="btn btn-ghost btn-sm btn-block justify-start">Iniciar Sesión</Link></li>
+                  <li><Link to="/register" className="btn btn-primary btn-sm btn-block justify-start">Registrarse</Link></li>
                 </>
               )}
             </ul>

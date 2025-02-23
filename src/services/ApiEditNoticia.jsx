@@ -32,6 +32,7 @@ const EditNewPaper = async (data) => {
             }
         );
         // Retornar la respuesta
+        window.location.reload();
         return response.data;
     } catch (error) {
         throw error;

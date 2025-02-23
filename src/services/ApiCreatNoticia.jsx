@@ -30,6 +30,7 @@ const CreatNewPaper = async (data) => {
             }
         );
         // Retornar la respuesta
+        window.location.reload();
         return response.data;
     } catch (error) {
         throw error; // Re-lanzar el error para que se maneje en el componente

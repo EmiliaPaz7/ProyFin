@@ -1,87 +1,135 @@
-import { ChevronRight, Rocket, Brain, Laptop } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { Rocket, Brain, Laptop, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import NewsSkeletonLoader from "../ListNewPaper/NewsSkeletonLoader";
+import Datos from "../../services/ApiDatos";
 
 function Main() {
+  const [news, setNews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const newsData = await Datos('noticias');
+        if (newsData) {
+          setNews(newsData.slice(0, 3)); // Solo mostrar las 3 últimas noticias
+        } else {
+          setError('No se pudieron cargar las noticias');
+        }
+      } catch (err) {
+        setError('Error al cargar las noticias: ' + err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, []);
+
   return (
     <main className="flex-grow">
-      {/* Hero Section */}
-      <section className="hero min-h-[70vh] bg-gradient-to-br from-primary to-accent text-primary-content">
-        <div className="hero-content text-center">
-          <div className="max-w-3xl">
-            <h2 className="text-5xl font-bold mb-6 animate-fade-up">
-              Educación del Futuro
-            </h2>
-            <p className="text-xl mb-8 opacity-90">
-              Formando líderes innovadores con tecnología de vanguardia y valores eternos
-            </p>
-            <button className="btn btn-secondary glass">
-              Descubre el Futuro
-              <ChevronRight className="ml-2 h-5 w-5" />
-            </button>
-          </div>
+      {/* Hero Section with Parallax Effect */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/90 to-secondary/90" />
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: "url('/school-bg.jpg')",
+            filter: "brightness(0.3)",
+          }}
+        />
+        <div className="relative container mx-auto px-4 text-center text-primary-content">
+          <h2 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-up">
+            Formando el Futuro
+            <span className="block text-2xl md:text-3xl mt-4 text-secondary-content/90">
+              Colegio Fiscomisional Bernabé de Larraul
+            </span>
+          </h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
+            Educación innovadora con valores eternos para los líderes del mañana
+          </p>
         </div>
       </section>
 
       {/* News Section */}
-      <section className="py-20 bg-base-100">
+      <section className="py-20 bg-base-200">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-12 text-center bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            Últimas Noticias
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-300">
-                <figure>
-                  <img
-                    src={`/Logo.jpeg`}
-                    alt={`Noticia ${i}`}
-                    className="w-full h-48 object-cover"
-                  />
-                </figure>
-                <div className="card-body">
-                  <h3 className="card-title text-primary">Innovación Educativa {i}</h3>
-                  <p className="text-base-content/80">
-                    Descubre las últimas tendencias en educación y tecnología que implementamos en nuestro programa.
-                  </p>
-                  <div className="card-actions justify-end">
-                    <button className="btn btn-ghost btn-sm">
-                      Leer más
-                      <ChevronRight className="ml-1 h-4 w-4" />
-                    </button>
+          <div className="flex justify-between items-center mb-12">
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              Últimas Noticias
+            </h2>
+            <Link to="/listuser" className="btn btn-ghost gap-2 group">
+              Ver todas
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+          {loading ? (
+            <NewsSkeletonLoader />
+          ) : error ? (
+            <div className="alert alert-error shadow-lg">
+              <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <div>
+                <h3 className="font-bold">¡Oops!</h3>
+                <div className="text-xs">{error}</div>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {news.map((item) => (
+                <div key={item._id} className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 group">
+                  <figure className="relative overflow-hidden aspect-video">
+                    <img
+                      src={item.newsimage?.url}
+                      alt={item.newsimage?.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-base-300/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </figure>
+                  <div className="card-body">
+                    <h3 className="card-title text-primary">{item.title}</h3>
+                    <p className="text-base-content/80 line-clamp-3">{item.main}</p>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-base-200">
+      <section className="py-20 bg-base-100">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-12 text-center bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            Ventajas Innovadoras
+          <h2 className="text-3xl font-bold mb-12 text-center bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            Nuestra Propuesta Educativa
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                icon: <Rocket className="w-12 h-12 text-primary" />,
-                title: "Educación Futurista",
-                description: "Metodologías innovadoras y tecnología de vanguardia.",
+                icon: <Rocket className="w-12 h-12" />,
+                title: "Innovación Continua",
+                description: "Metodologías de enseñanza actualizadas y tecnología de vanguardia para un aprendizaje efectivo.",
               },
               {
-                icon: <Brain className="w-12 h-12 text-accent" />,
-                title: "Desarrollo Cognitivo",
-                description: "Programas personalizados para potenciar el aprendizaje.",
+                icon: <Brain className="w-12 h-12" />,
+                title: "Desarrollo Integral",
+                description: "Programas personalizados que potencian las capacidades individuales de cada estudiante.",
               },
               {
-                icon: <Laptop className="w-12 h-12 text-secondary" />,
-                title: "Tecnología Avanzada",
-                description: "Plataformas digitales y laboratorios modernos.",
+                icon: <Laptop className="w-12 h-12" />,
+                title: "Infraestructura Digital",
+                description: "Espacios modernos equipados con la última tecnología educativa.",
               },
             ].map((item, index) => (
-              <div key={index} className="card bg-base-100 shadow-xl hover:scale-105 transition-transform duration-300">
+              <div key={index} className="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2">
                 <div className="card-body items-center text-center">
-                  {item.icon}
+                  <div className="p-4 bg-primary/10 rounded-full mb-4">
+                    {item.icon}
+                  </div>
                   <h3 className="card-title text-primary">{item.title}</h3>
                   <p className="text-base-content/80">{item.description}</p>
                 </div>
@@ -93,4 +141,5 @@ function Main() {
     </main>
   );
 }
+
 export default Main;

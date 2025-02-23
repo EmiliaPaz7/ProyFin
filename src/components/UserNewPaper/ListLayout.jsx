@@ -1,11 +1,8 @@
-import { useState } from 'react';
-import { Plus, Home } from 'lucide-react';
+import { Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import NewsGrid from './NewsGrid';
-import CreateNewsModal from './CreateNewsModal';
 
 function HomeLayout() {
-    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     return (
         <div className="min-h-screen bg-base-200 py-8">
@@ -30,21 +27,10 @@ function HomeLayout() {
                             </p>
                         </div>
                     </div>
-                    <button
-                        className="btn btn-primary btn-lg gap-2 normal-case w-full sm:w-auto"
-                        onClick={() => setIsCreateModalOpen(true)}
-                    >
-                        <Plus className="w-5 h-5" />
-                        Nueva Noticia
-                    </button>
                 </div>
 
                 <NewsGrid />
 
-                <CreateNewsModal
-                    isOpen={isCreateModalOpen}
-                    onClose={() => setIsCreateModalOpen(false)}
-                />
             </div>
         </div>
     );
