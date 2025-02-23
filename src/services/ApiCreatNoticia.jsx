@@ -15,7 +15,6 @@ const CreatNewPaper = async (data) => {
             },
         });
         let picturenewpaper = fileUploadResponse.data.data;
-        console.log(picturenewpaper);
         // Hacer la solicitud POST a la API
         const response = await axios.post(apiUrl, {
                 user : storedUserId,
